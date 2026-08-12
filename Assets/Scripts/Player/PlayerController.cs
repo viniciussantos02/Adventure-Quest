@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem; // 1. Importante: Incluir o namespace do novo Input System
 
@@ -13,11 +14,17 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController controller;
     private Animator animator;
+    public Animator Animator {get => animator;}
+    public CinemachineImpulseSource impulseSource;
+    private PlayerInput playerInput;
+    public PlayerInput PlayerInput {get => playerInput;}
 
     private Vector2 movementInput; // Guarda o valor bruto (X, Y) do novo Input System
     private Vector3 inputDirection;
     private bool isAttacking;
     private float attackCoolDown = 0.53f;
+
+    public PlayerHealthManager playerHealth;
 
     public static PlayerController Instance;
 
@@ -32,6 +39,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     void Update()
@@ -96,7 +104,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    static int GetRandomNumber(int min, int max)
+    public static int GetRandomNumber(int min, int max)
     {
         return UnityEngine.Random.Range(min, max + 1);
     }
@@ -107,5 +115,11 @@ public class PlayerController : MonoBehaviour
         {
             slashFx.Play();
         }
+    }
+
+    //Metodo para tremer a camera ao acertar o inimigo atancado
+    public void ShakeCamera()
+    {
+        impulseSource.GenerateImpulse();
     }
 }
